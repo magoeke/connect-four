@@ -1,6 +1,30 @@
-(ns connect-four.core)
+(ns connect-four.core
+  (require [clojure.string :as str]))
 
 (println "Connect Four v.0.1")
+
+(def turn-count 0)
+
+(defn setCell
+  "Sets cell in field."
+  [player y x]
+  (println player )
+  (println y)
+  (println x))
+
+(defn currentPlayer
+  "Returns sign of current player."
+  []
+  (if (= 0 (mod turn-count 2)) "X" "O"))
+
+(defn prepareCommandToSet
+  "Prepares command to call setCell."
+  [command]
+  (def turn-count (inc turn-count)) ; update turn-count
+  (let [coords (str/split command #",")]
+    (setCell (currentPlayer)
+      (Integer. (get coords 0))
+      (Integer. (get coords 1)))))
 
 (defn showCommands
   "Outputs all possible commands."
@@ -12,7 +36,7 @@
   [command]
   (cond
     (= command "new")(println "not implemented yet")
-    ;insert cond REGEX Y,X
+    (re-matches #"[0-9]+,[0-9]+" command)(prepareCommandToSet command)
     :else (println "command doesn't exist")))
 
 (defn handleInput
