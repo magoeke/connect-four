@@ -7,6 +7,20 @@
   []
   (println "Commands: stop; Y,X; new"))
 
+(defn evaluateCommand
+  "Evaluates command from user input."
+  [command]
+  (cond
+    (= command "new")(println "not implemented yet")
+    ;insert cond REGEX Y,X
+    :else (println "command doesn't exist")))
+
+(defn handleInput
+  "Handles Input from user. input != stop"
+  [input]
+  (evaluateCommand (str input))
+  (gameloop))
+
 (defn gameloop
   "This function represents the game loop."
   []
@@ -14,6 +28,7 @@
   (let [input (read-line)]
     (println input)
     (if (not= input "stop")
-      (gameloop))))
+      (handleInput input)
+      (println "I hope you enjoyed the game."))))
 
 (gameloop)
