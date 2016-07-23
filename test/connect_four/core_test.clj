@@ -2,6 +2,15 @@
   (:require [clojure.test :refer :all]
             [connect-four.core :refer :all]))
 
+; fixture
+(defn set-var-to-default
+  "Sets turn-count to 0."
+  [f]
+  (intern 'connect-four.core 'turn-count 0)
+  (f))
+
+(use-fixtures :each set-var-to-default)
+
 (def new-test-field [["-" "-"]["-" "X"]])
 
 (deftest field-test
