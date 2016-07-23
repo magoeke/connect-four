@@ -59,15 +59,21 @@
 
 (defn wrap-draw
   "Draws the field after the command was executed."
-  [function argument]
-  (function argument)
-  (draw-field))
+  ([function] (function) (draw-field))
+  ([function argument] (function argument) (draw-field)))
+
+(defn reset-game
+  "Resets current game."
+  []
+  (dosync
+    (ref-set turn-count 0)
+    (ref-set field (create2D field-size))))
 
 (defn evaluate-command
   "Evaluates command from user input."
   [command]
   (cond
-    (= command "new")(wrap-draw println "not implemented yet")
+    (= command "new")(wrap-draw reset-game)
     (re-matches #"[0-9]+,[0-9]+" command)(wrap-draw prepare-command-to-set command)
     :else (println "command doesn't exist")))
 
@@ -84,9 +90,8 @@
   []
   (show-commands)
   (let [input (read-line)]
-    (println input)
     (if (not= input "stop")
       (handle-input input)
       (println "I hope you enjoyed the game."))))
 
-; (game-loop)
+(game-loop)
