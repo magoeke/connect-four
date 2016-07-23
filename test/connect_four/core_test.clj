@@ -59,3 +59,21 @@
     (set-cell "O" 1 1)
     (is (= field new-test-field))
     (is (= turn-count -1))))
+
+
+(deftest prepare-command-to-set-test
+  (testing "Valid command 1,1 for the first time."
+    (turn-count-up) ; only necessary to get new-test-field
+    (prepare-command-to-set "1,1")
+    (is (= field new-test-field))
+    (is (= turn-count 2)))
+
+  (testing "Valid command 1,1 for second time."
+    (prepare-command-to-set "1,1")
+    (is (= field new-test-field))
+    (is (= turn-count 2)))
+
+  (testing "Valid command 0,0"
+    (prepare-command-to-set "0,0")
+    (is (not= field new-test-field))
+    (is (= turn-count 3))))
