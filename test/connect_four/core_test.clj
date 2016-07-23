@@ -33,11 +33,11 @@
     (is (= @turn-count 0)))
 
   (testing "Increase turn-count."
-    (turn-count-up)
+    (turn-count-alter inc)
     (is (= 1 @turn-count)))
 
   (testing "Decrease turn-count."
-    (turn-count-down)
+    (turn-count-alter dec)
     (is (= 0 @turn-count))))
 
 
@@ -46,7 +46,7 @@
     (is (= "X" (current-player))))
 
   (testing "Get current player O."
-    (turn-count-up)
+    (turn-count-alter inc)
     (is (= "O" (current-player)))))
 
 
@@ -64,7 +64,7 @@
 
 (deftest prepare-command-to-set-test
   (testing "Valid command 1,1 for the first time."
-    (turn-count-up) ; only necessary to get new-test-field
+    (turn-count-alter inc) ; only necessary to get new-test-field
     (prepare-command-to-set "1,1")
     (is (= @field new-test-field))
     (is (= @turn-count 2)))

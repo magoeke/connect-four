@@ -19,22 +19,17 @@
   [new-field]
   (dosync (ref-set field new-field)))
 
-(defn turn-count-down
-  "Decreases value of turn-count."
-  []
-  (dosync (alter turn-count dec)))
-
-(defn turn-count-up
-  "Increases value of turn-count."
-  []
-  (dosync (alter turn-count inc)))
+(defn turn-count-alter
+  "Executes fn on turn-count and saves result."
+  [fn]
+  (dosync (alter turn-count fn)))
 
 (defn set-cell
   "Sets cell in field."
   [player y x]
   (if (= "-" (get-in @field [y x]))
     (update-field (assoc-in @field [y x] player))
-    (turn-count-down)))
+    (turn-count-alter dec)))
 
 (defn current-player
   "Returns sign of current player."
@@ -44,7 +39,7 @@
 (defn prepare-command-to-set
   "Prepares command to call setCell."
   [command]
-  (turn-count-up)
+  (turn-count-alter inc)
   (let [coords (str/split command #",")]
     (set-cell (current-player)
       (Integer. (get coords 0))
