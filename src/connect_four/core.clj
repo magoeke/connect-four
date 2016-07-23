@@ -9,37 +9,37 @@
   (vec (repeat size (vec (repeat size "-")))))
 
 
-(def turn-count 0)
+(def turn-count (ref 0))
 (def field-size 3)
-(def field (create2D field-size)) ;
+(def field (ref (create2D field-size)))
 
 
 (defn update-field
   "Updates field."
   [new-field]
-  (def field new-field))
+  (dosync (ref-set field new-field)))
 
 (defn turn-count-down
   "Decreases value of turn-count."
   []
-  (def turn-count (dec turn-count)))
+  (dosync (alter turn-count dec)))
 
 (defn turn-count-up
   "Increases value of turn-count."
   []
-  (def turn-count (inc turn-count)))
+  (dosync (alter turn-count inc)))
 
 (defn set-cell
   "Sets cell in field."
   [player y x]
-  (if (= "-" (get-in field [y x]))
-    (update-field (assoc-in field [y x] player))
+  (if (= "-" (get-in @field [y x]))
+    (update-field (assoc-in @field [y x] player))
     (turn-count-down)))
 
 (defn current-player
   "Returns sign of current player."
   []
-  (if (= 0 (mod turn-count 2)) "X" "O"))
+  (if (= 0 (mod @turn-count 2)) "X" "O"))
 
 (defn prepare-command-to-set
   "Prepares command to call setCell."
@@ -58,9 +58,9 @@
 (defn draw-field
   "Draws the field."
   []
-  (println field)
-  (map println field) ; doesn't output anything
-  (println turn-count))
+  (println @field)
+  (map println @field) ; doesn't output anything
+  (println @turn-count))
 
 (defn wrap-draw
   "Draws the field after the command was executed."
