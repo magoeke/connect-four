@@ -24,4 +24,10 @@
     (turn-count-down)
     (is (= 0 turn-count))))
 
-; (deftest )
+(deftest current-player-test
+  (testing "Get current player X."
+    (is (= "X" (current-player))))
+
+  (testing "Get current player O."
+    (turn-count-up)
+    (is (= "O" (current-player)))))
