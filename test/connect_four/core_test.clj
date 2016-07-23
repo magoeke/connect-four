@@ -2,6 +2,26 @@
   (:require [clojure.test :refer :all]
             [connect-four.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(def new-test-field [["-" "-"]["-" "X"]])
+
+(deftest field-test
+  (testing "Create a 2D vector with size 2."
+    (is (= [["-" "-"]["-" "-"]] (create2D 2))))
+
+  (testing "Update field."
+    (update-field new-test-field)
+    (is (= field new-test-field))))
+
+(deftest turn-count-test
+  (testing "Initial turn-count."
+    (is (= turn-count 0)))
+
+  (testing "Increase turn-count."
+    (turn-count-up)
+    (is (= 1 turn-count)))
+
+  (testing "Decrease turn-count."
+    (turn-count-down)
+    (is (= 0 turn-count))))
+
+; (deftest )
