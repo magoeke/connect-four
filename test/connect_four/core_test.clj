@@ -79,5 +79,45 @@
     (is (not= field new-test-field))
     (is (= @turn-count 3))))
 
+
+(deftest horizontal-win-test
+
+  ; set up test
+  (dosync (ref-set field [["X" "X"]["O" "-"]]))
+  (intern 'connect-four.core 'field-size 2)
+
+  (testing "Horizontal right returns 0 in first line."
+    (is (= 0 (horizontal-win 0 1 0 inc))))
+
+  (testing "Horizontal left returns 1 in first line."
+    (is (= 1 (horizontal-win 0 1 0 dec))))
+
+  ; change field for test
+  (dosync (ref-set field (assoc-in @field [0 0] "-")))
+
+  (testing "Horizontal left returns 0 in first line.")
+    (is (= 0 (horizontal-win 0 1 0 dec))))
+
+
+(deftest vertical-win-test
+
+  ; set up
+  (dosync (ref-set field [["X" "O"]["X" "-"]]))
+  (intern 'connect-four.core 'field-size 2)
+
+  (testing "Vertical up returns 0 in first column."
+    (is (= 0 (vertical-win 0 0 0 dec))))
+
+  (testing "Vertical down returns 1 in first column.")
+    (is (= 1 (vertical-win 0 0 0 inc)))
+
+  ; cahnge field for test
+  (dosync (ref-set field (assoc-in @field [1 0] "-")))
+
+  (testing "Vertical down returns 0 in first column.")
+    (is (= 0 (vertical-win 0 0 0 inc))))
+
+
+
 ; TODO: mocking in clojure ?
 ; (deftest evaluate-command-test)

@@ -11,7 +11,35 @@
 
 (def turn-count (ref 0))
 (def field-size 3)
+(def win-count 2)
 (def field (ref (create2D field-size)))
+
+
+(defn won?
+  "Checks if a player won the game. Needs the
+   last setted x and y as an input."
+  [y x]
+  (println "nothing"))
+
+(declare current-player)
+
+(defn horizontal-win
+  "Checks if a horizontal win exists."
+  [y x n fn]
+  (if (and
+    (<= 0 x (dec field-size))
+    (= (current-player) (get-in @field [y x])))
+      (horizontal-win y (fn x) (inc n) fn)
+      (dec n)))
+
+(defn vertical-win
+  "Checks if a vertical win exists."
+  [y x n fn]
+  (if (and
+    (<= 0 y (dec field-size))
+    (= (current-player) (get-in @field [y x])))
+    (vertical-win (fn y) x (inc n) fn)
+    (dec n)))
 
 
 (defn update-field
@@ -94,4 +122,4 @@
       (handle-input input)
       (println "I hope you enjoyed the game."))))
 
-(game-loop)
+; (game-loop)
