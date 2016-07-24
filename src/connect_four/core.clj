@@ -133,12 +133,6 @@
     :else (println "command doesn't exist")))
 
 (declare game-loop) ; feels dirty
-;
-; (defn handle-input
-;   "Handles Input from user. input != stop"
-;   [input]
-;   (println (evaluate-command (str input)))
-;   (game-loop))
 
 (defn handle-input
   "Handles Input from user. input != stop"
