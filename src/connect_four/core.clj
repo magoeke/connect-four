@@ -88,7 +88,7 @@
 (defn current-player
   "Returns sign of current player."
   []
-  (if (= 0 (mod @turn-count 2)) player-one player-two))
+  (if (zero? (mod @turn-count 2)) player-one player-two))
 
 (defn prepare-command-to-set
   "Prepares command to call setCell."
