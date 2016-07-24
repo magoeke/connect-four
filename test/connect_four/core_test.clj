@@ -80,97 +80,97 @@
     (is (= @turn-count 3))))
 
 
-(deftest horizontal-win-test
+(deftest horizontal-count-test
 
   ; set up test
   (dosync (ref-set field [["X" "X"]["O" "-"]]))
   (intern 'connect-four.core 'field-size 2)
 
   (testing "Horizontal right returns 0 in first line."
-    (is (= 0 (horizontal-win 0 1 0 inc))))
+    (is (= 0 (horizontal-count 0 1 0 inc))))
 
   (testing "Horizontal left returns 1 in first line."
-    (is (= 1 (horizontal-win 0 1 0 dec))))
+    (is (= 1 (horizontal-count 0 1 0 dec))))
 
   ; change field for test
   (dosync (ref-set field (assoc-in @field [0 0] "-")))
 
   (testing "Horizontal left returns 0 in first line.")
-    (is (= 0 (horizontal-win 0 1 0 dec)))
+    (is (= 0 (horizontal-count 0 1 0 dec)))
 
   ; additional test case with bigger field
   (dosync (ref-set field [["X" "X" "X"] ["-" "-" "-"] ["-" "-" "-"]]))
   (intern 'connect-four.core 'field-size 3)
 
   (testing "left"
-    (is (= 0 (horizontal-win 0 0 0 dec))))
+    (is (= 0 (horizontal-count 0 0 0 dec))))
 
   (testing "right"
-    (is (= 2 (horizontal-win 0 0 0 inc)))))
+    (is (= 2 (horizontal-count 0 0 0 inc)))))
 
 
-(deftest vertical-win-test
+(deftest vertical-count-test
 
   ; set up
   (dosync (ref-set field [["X" "O"]["X" "-"]]))
   (intern 'connect-four.core 'field-size 2)
 
   (testing "Vertical up returns 0 in first column."
-    (is (= 0 (vertical-win 0 0 0 dec))))
+    (is (= 0 (vertical-count 0 0 0 dec))))
 
   (testing "Vertical down returns 1 in first column.")
-    (is (= 1 (vertical-win 0 0 0 inc)))
+    (is (= 1 (vertical-count 0 0 0 inc)))
 
   ; cahnge field for test
   (dosync (ref-set field (assoc-in @field [1 0] "-")))
 
   (testing "Vertical down returns 0 in first column.")
-    (is (= 0 (vertical-win 0 0 0 inc))))
+    (is (= 0 (vertical-count 0 0 0 inc))))
 
 
-(deftest descending-diagonal-win-test
+(deftest descending-diagonal-count-test
 
   ;set up
   (dosync (ref-set field [["X" "O"]["-" "X"]]))
   (intern 'connect-four.core 'field-size 2)
 
   (testing "Diagonal up returns 0."
-    (is (= 0 (diagonal-win 0 0 0 dec dec))))
+    (is (= 0 (diagonal-count 0 0 0 dec dec))))
 
   (testing "Diagonal down returns 1."
-    (is (= 1 (diagonal-win 0 0 0 inc inc))))
+  (is (= 1 (diagonal-count 0 0 0 inc inc))))
 
   ;change field for test
   (dosync (ref-set field (assoc-in @field [1 1] "-")))
 
   (testing "Diagonal down returns 0."
-    (is (= 0 (diagonal-win 0 0 0 inc inc)))))
+    (is (= 0 (diagonal-count 0 0 0 inc inc)))))
 
 
-(deftest ascending-diagonal-win-test
+(deftest ascending-diagonal-count-test
 
   ; set up
   (dosync (ref-set field [["O" "X"]["X" "-"]]))
   (intern 'connect-four.core 'field-size 2)
 
   (testing "Diagonl up returns 0."
-    (is (= 0 (diagonal-win 0 1 0 dec inc))))
+    (is (= 0 (diagonal-count 0 1 0 dec inc))))
 
   (testing "Digonal down returns 1."
-    (is (= 1 (diagonal-win 0 1 0 inc dec))))
+    (is (= 1 (diagonal-count 0 1 0 inc dec))))
 
   ; change field for test
   (dosync (ref-set field (assoc-in @field [1 0] "-")))
 
   (testing "Diagonal down returns 0."
-    (is (= 0 (diagonal-win 0 1 0 dec inc)))))
+    (is (= 0 (diagonal-count 0 1 0 dec inc)))))
 
 
 (deftest won?-test
 
   ;set up
   (intern 'connect-four.core 'win-count 3)
-  (intern 'connect-four.core 'fieldsize 3)
+  (intern 'connect-four.core 'field-size 3)
 
   (testing "won? should return false."
     (dosync (ref-set field [["X" "-" "-"] ["-" "-" "-"] ["-" "-" "-"]]))

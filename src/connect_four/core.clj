@@ -3,65 +3,70 @@
 
 (println "Connect Four v.0.1")
 
-(defn create2D
-  "Creates a 2D vector.(game board)"
-  [size]
-  (vec (repeat size (vec (repeat size "-")))))
-
-
+(def no-player "-")
+(def player-one "X")
+(def player-two "O")
 (def turn-count (ref 0))
 (def field-size 3)
 (def win-count 2)
-(def field (ref (create2D field-size)))
+(def start-count 0)
 
+(defn create2D
+  "Creates a 2D vector.(game board)"
+  [size]
+  (vec (repeat size (vec (repeat size no-player)))))
+
+(def field (ref (create2D field-size)))
 
 (declare current-player)
 
-(defn horizontal-win
-  "Checks if a horizontal win exists."
+(defn horizontal-count
+  "Counts the number of stones from current player in horizontal line.
+  It counts either the left or the right side from Point(y,x). n is a helper
+  variable to count the stones. fn expects: inc(right side) or dec(left side)."
   [y x n fn]
   (if (and
     (<= 0 x (dec field-size))
     (= (current-player) (get-in @field [y x])))
-      (horizontal-win y (fn x) (inc n) fn)
+      (horizontal-count y (fn x) (inc n) fn)
       (dec n)))
 
-(defn vertical-win
-  "Checks if a vertical win exists."
+(defn vertical-count
+  "Counts the number of stones from current player in vertical line.
+  It counts either above or under the point(y,x). n is a helper variable to
+  count the stones. fn expects: inc(under) or dec(above)."
   [y x n fn]
   (if (and
     (<= 0 y (dec field-size))
     (= (current-player) (get-in @field [y x])))
-    (vertical-win (fn y) x (inc n) fn)
+    (vertical-count (fn y) x (inc n) fn)
     (dec n)))
 
-(defn diagonal-win
-  "Checks if a diagonal win exists."
+(defn diagonal-count
+  "Counts the number of stones from current player in diagonal line.
+  It counts either above or under the point(y,x). n is a helper variable to
+  count the stones.
+  Ascending count => fn-y:dec fn-x:inc(above) or fn-y:inc fn-x:dec(under)
+  Descending count => fn-y:dec fn-x:dec(above) or fn-y:inc fn-x:inc(under)"
   [y x n fn-y fn-x]
   (if (and
     (and
       (<= 0 y (dec field-size))
       (<= 0 x (dec field-size)))
     (= (current-player) (get-in @field [y x])))
-    (diagonal-win (fn-y y) (fn-x x) (inc n) fn-y fn-x)
+    (diagonal-count (fn-y y) (fn-x x) (inc n) fn-y fn-x)
     (dec n)))
 
 (defn won?
-  "Checks if a player won the game. Needs the
-   last setted x and y as an input."
+  "Checks if a player won the game. Needs the last changed cell coordinates
+  (y,x) as input."
   [y x]
   (cond
-    (<= win-count (inc (+ (horizontal-win y x 0 inc) (horizontal-win y x 0 dec)))) true
-    (<= win-count (inc (+ (vertical-win y x 0 inc) (vertical-win y x 0 dec)))) true
-    (<= win-count (inc (+ (diagonal-win y x 0 inc inc) (diagonal-win y x 0 dec dec)))) true
-    (<= win-count (inc (+ (diagonal-win y x 0 inc dec) (diagonal-win y x 0 dec inc)))) true
+    (<= win-count (inc (+ (horizontal-count y x start-count inc) (horizontal-count y x start-count dec)))) true
+    (<= win-count (inc (+ (vertical-count y x start-count inc) (vertical-count y x start-count dec)))) true
+    (<= win-count (inc (+ (diagonal-count y x start-count inc inc) (diagonal-count y x start-count dec dec)))) true
+    (<= win-count (inc (+ (diagonal-count y x start-count inc dec) (diagonal-count y x start-count dec inc)))) true
     :else false))
-
-; (defn won?
-;   [y x]
-;   (cond
-;     (= x 0) true
-;     :else false))
 
 (defn update-field
   "Updates field."
@@ -76,14 +81,14 @@
 (defn set-cell
   "Sets cell in field."
   [player y x]
-  (if (= "-" (get-in @field [y x]))
+  (if (= no-player (get-in @field [y x]))
     (update-field (assoc-in @field [y x] player))
     (turn-count-alter dec)))
 
 (defn current-player
   "Returns sign of current player."
   []
-  (if (= 0 (mod @turn-count 2)) "X" "O"))
+  (if (= 0 (mod @turn-count 2)) player-one player-two))
 
 (defn prepare-command-to-set
   "Prepares command to call setCell."
