@@ -193,6 +193,16 @@
     (is (won? 0 2))))
 
 
+(deftest evaluate-command-test
+  (testing "Should be false. (returns nil)"
+    (is (not (true? (Boolean. (evaluate-command "a"))))))
 
-; TODO: mocking in clojure ?
-; (deftest evaluate-command-test)
+  (testing "Should return false."
+    (is (= false (evaluate-command "1,1"))))
+
+  (testing "Should return false."
+    (is (= false (evaluate-command "new"))))
+
+  (testing "Should return true."
+    (dosync (ref-set field [["-" "O"] ["-" "-"]]))
+    (is (evaluate-command "1,1"))))

@@ -8,7 +8,7 @@
 (def player-two "O")
 (def turn-count (ref 0))
 (def field-size 3)
-(def win-count 2)
+(def win-count 3)
 (def start-count 0)
 
 (defn create2D
@@ -94,10 +94,9 @@
   "Prepares command to call setCell."
   [command]
   (turn-count-alter inc)
-  (let [coords (str/split command #",")]
-    (set-cell (current-player)
-      (Integer. (get coords 0))
-      (Integer. (get coords 1)))))
+  (let [coords (str/split command #",") y (Integer. (get coords 0)) x (Integer. (get coords 1))]
+    (set-cell (current-player) y x)
+    (won? y x)))
 
 (defn show-commands
   "Outputs all possible commands."
@@ -106,22 +105,24 @@
 
 (defn draw-field
   "Draws the field."
-  []
+  [result]
   (println @field)
   (map println @field) ; doesn't output anything
-  (println @turn-count))
+  (println @turn-count)
+  (Boolean. result))
 
 (defn wrap-draw
   "Draws the field after the command was executed."
-  ([function] (function) (draw-field))
-  ([function argument] (function argument) (draw-field)))
+  ([function] (draw-field (function)))
+  ([function argument] (draw-field (function argument))))
 
 (defn reset-game
   "Resets current game."
   []
   (dosync
     (ref-set turn-count 0)
-    (ref-set field (create2D field-size))))
+    (ref-set field (create2D field-size)))
+  false)
 
 (defn evaluate-command
   "Evaluates command from user input."
@@ -132,12 +133,19 @@
     :else (println "command doesn't exist")))
 
 (declare game-loop) ; feels dirty
+;
+; (defn handle-input
+;   "Handles Input from user. input != stop"
+;   [input]
+;   (println (evaluate-command (str input)))
+;   (game-loop))
 
 (defn handle-input
   "Handles Input from user. input != stop"
   [input]
-  (evaluate-command (str input))
-  (game-loop))
+  (if (= "false" (str (Boolean. (evaluate-command (str input))))) ; ugly
+    (game-loop)
+    (println "Game Over.")))
 
 (defn game-loop
   "This function represents the game loop."
