@@ -118,6 +118,43 @@
     (is (= 0 (vertical-win 0 0 0 inc))))
 
 
+(deftest descending-diagonal-win-test
+
+  ;set up
+  (dosync (ref-set field [["X" "O"]["-" "X"]]))
+  (intern 'connect-four.core 'field-size 2)
+
+  (testing "Diagonal up returns 0."
+    (is (= 0 (diagonal-win 0 0 0 dec dec))))
+
+  (testing "Diagonal down returns 1."
+    (is (= 1 (diagonal-win 0 0 0 inc inc))))
+
+  ;change field for test
+  (dosync (ref-set field (assoc-in @field [1 1] "-")))
+
+  (testing "Diagonal down returns 0."
+    (is (= 0 (diagonal-win 0 0 0 inc inc)))))
+
+
+(deftest ascending-diagonal-win-test
+
+  ; set up
+  (dosync (ref-set field [["O" "X"]["X" "-"]]))
+  (intern 'connect-four.core 'field-size 2)
+
+  (testing "Diagonl up returns 0."
+    (is (= 0 (diagonal-win 0 1 0 dec inc))))
+
+  (testing "Digonal down returns 1."
+    (is (= 1 (diagonal-win 0 1 0 inc dec))))
+
+  ; change field for test
+  (dosync (ref-set field (assoc-in @field [1 0] "-")))
+
+  (testing "Diagonal down returns 0."
+    (is (= 0 (diagonal-win 0 1 0 dec inc)))))
+
 
 ; TODO: mocking in clojure ?
 ; (deftest evaluate-command-test)

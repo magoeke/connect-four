@@ -41,6 +41,16 @@
     (vertical-win (fn y) x (inc n) fn)
     (dec n)))
 
+(defn diagonal-win
+  "Checks if a diagonal win exists."
+  [y x n fn-y fn-x]
+  (if (and
+    (and
+      (<= 0 y (dec field-size))
+      (<= 0 x (dec field-size)))
+    (= (current-player) (get-in @field [y x])))
+    (diagonal-win (fn-y y) (fn-x x) (inc n) fn-y fn-x)
+    (dec n)))
 
 (defn update-field
   "Updates field."
