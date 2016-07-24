@@ -15,12 +15,6 @@
 (def field (ref (create2D field-size)))
 
 
-(defn won?
-  "Checks if a player won the game. Needs the
-   last setted x and y as an input."
-  [y x]
-  (println "nothing"))
-
 (declare current-player)
 
 (defn horizontal-win
@@ -51,6 +45,23 @@
     (= (current-player) (get-in @field [y x])))
     (diagonal-win (fn-y y) (fn-x x) (inc n) fn-y fn-x)
     (dec n)))
+
+(defn won?
+  "Checks if a player won the game. Needs the
+   last setted x and y as an input."
+  [y x]
+  (cond
+    (<= win-count (inc (+ (horizontal-win y x 0 inc) (horizontal-win y x 0 dec)))) true
+    (<= win-count (inc (+ (vertical-win y x 0 inc) (vertical-win y x 0 dec)))) true
+    (<= win-count (inc (+ (diagonal-win y x 0 inc inc) (diagonal-win y x 0 dec dec)))) true
+    (<= win-count (inc (+ (diagonal-win y x 0 inc dec) (diagonal-win y x 0 dec inc)))) true
+    :else false))
+
+; (defn won?
+;   [y x]
+;   (cond
+;     (= x 0) true
+;     :else false))
 
 (defn update-field
   "Updates field."

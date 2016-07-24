@@ -96,7 +96,17 @@
   (dosync (ref-set field (assoc-in @field [0 0] "-")))
 
   (testing "Horizontal left returns 0 in first line.")
-    (is (= 0 (horizontal-win 0 1 0 dec))))
+    (is (= 0 (horizontal-win 0 1 0 dec)))
+
+  ; additional test case with bigger field
+  (dosync (ref-set field [["X" "X" "X"] ["-" "-" "-"] ["-" "-" "-"]]))
+  (intern 'connect-four.core 'field-size 3)
+
+  (testing "left"
+    (is (= 0 (horizontal-win 0 0 0 dec))))
+
+  (testing "right"
+    (is (= 2 (horizontal-win 0 0 0 inc)))))
 
 
 (deftest vertical-win-test
@@ -154,6 +164,34 @@
 
   (testing "Diagonal down returns 0."
     (is (= 0 (diagonal-win 0 1 0 dec inc)))))
+
+
+(deftest won?-test
+
+  ;set up
+  (intern 'connect-four.core 'win-count 3)
+  (intern 'connect-four.core 'fieldsize 3)
+
+  (testing "won? should return false."
+    (dosync (ref-set field [["X" "-" "-"] ["-" "-" "-"] ["-" "-" "-"]]))
+    (is (false? (won? 0 0))))
+
+  (testing "won? should return true. (horizontal)"
+    (dosync (ref-set field [["X" "X" "X"] ["-" "-" "-"] ["-" "-" "-"]]))
+    (is (won? 0 0)))
+
+  (testing "won? should return true. (vertical)"
+    (dosync (ref-set field [["X" "-" "-"] ["X" "-" "-"] ["X" "-" "-"]]))
+    (is (won? 0 0)))
+
+  (testing "won? should return true. (descending diagonal)"
+    (dosync (ref-set field [["X" "-" "-"] ["-" "X" "-"] ["-" "-" "X"]]))
+    (is (won? 0 0)))
+
+  (testing "won? should return true. (ascending diagonal)"
+    (dosync (ref-set field [["-" "-" "X"] ["-" "X" "-"] ["X" "-" "-"]]))
+    (is (won? 0 2))))
+
 
 
 ; TODO: mocking in clojure ?
