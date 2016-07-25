@@ -90,13 +90,21 @@
   []
   (if (zero? (mod @turn-count 2)) player-one player-two))
 
+(defn next-possible-cell
+  "Returns y value for next possible cell in column x."
+  [x]
+  (first (filter #(= (get-in @field [% x]) no-player) (range field-size -1 -1))))
+
 (defn prepare-command-to-set
   "Prepares command to call setCell."
   [command]
-  (turn-count-alter inc)
-  (let [coords (str/split command #",") y (Integer. (get coords 0)) x (Integer. (get coords 1))]
-    (set-cell (current-player) y x)
-    (won? y x)))
+  (let [x (Integer. command) y (next-possible-cell x)]
+    (if (or (> 0 x (dec field-size)) (nil? y))
+        (println "No valid turn.")
+        (do
+          (turn-count-alter inc)
+          (set-cell (current-player) y x)
+          (won? y x)))))
 
 (defn show-commands
   "Outputs all possible commands."
@@ -129,7 +137,7 @@
   [command]
   (cond
     (= command "new")(wrap-draw reset-game)
-    (re-matches #"[0-9]+,[0-9]+" command)(wrap-draw prepare-command-to-set command)
+    (re-matches #"[0-9]+" command)(wrap-draw prepare-command-to-set command)
     :else (println "command doesn't exist")))
 
 (declare game-loop) ; feels dirty

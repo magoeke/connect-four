@@ -50,6 +50,16 @@
     (is (= "O" (current-player)))))
 
 
+(deftest next-possible-cell-test
+  (testing "Should return 1"
+    (dosync (ref-set field [["-" "-"]["-" "-"]]))
+    (is (= 1 (next-possible-cell 0))))
+
+  (testing "Should return 0"
+    (dosync (ref-set field [["-" "-"]["X" "-"]]))
+    (is (= 0 (next-possible-cell 0)))))
+
+
 (deftest set-cell-test
   (testing "Set cell 1,1 in a 2x2 field the first time."
     (set-cell "X" 1 1)
@@ -63,19 +73,16 @@
 
 
 (deftest prepare-command-to-set-test
-  (testing "Valid command 1,1 for the first time."
+  (testing "Valid command 1 for the first time."
     (turn-count-alter inc) ; only necessary to get new-test-field
-    (prepare-command-to-set "1,1")
+    (prepare-command-to-set "1")
     (is (= @field new-test-field))
     (is (= @turn-count 2)))
 
-  (testing "Valid command 1,1 for second time."
-    (prepare-command-to-set "1,1")
-    (is (= @field new-test-field))
-    (is (= @turn-count 2)))
+    ; column full?
 
-  (testing "Valid command 0,0"
-    (prepare-command-to-set "0,0")
+  (testing "Valid command 0"
+    (prepare-command-to-set "0")
     (is (not= field new-test-field))
     (is (= @turn-count 3))))
 
@@ -198,11 +205,11 @@
     (is (not (true? (Boolean. (evaluate-command "a"))))))
 
   (testing "Should return false."
-    (is (= false (evaluate-command "1,1"))))
+    (is (= false (evaluate-command "1"))))
 
   (testing "Should return false."
     (is (= false (evaluate-command "new"))))
 
   (testing "Should return true."
     (dosync (ref-set field [["-" "O"] ["-" "-"]]))
-    (is (evaluate-command "1,1"))))
+    (is (evaluate-command "1"))))
