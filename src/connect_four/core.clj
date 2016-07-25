@@ -6,8 +6,8 @@
 (def player-one "X")
 (def player-two "O")
 (def turn-count (ref 0))
-(def field-size 3)
-(def win-count 3)
+(def field-size 7)
+(def win-count 4)
 (def start-count 0)
 
 (defn create2D
