@@ -1,5 +1,4 @@
-(ns connect-four.core
-  (require [clojure.string :as str]))
+(ns connect-four.core)
 
 (println "Connect Four v.0.1")
 
@@ -100,7 +99,7 @@
   [command]
   (let [x (Integer. command) y (next-possible-cell x)]
     (if (or (> 0 x (dec field-size)) (nil? y))
-        (println "No valid turn.")
+        (println "!!!!!!!!! No valid turn. !!!!!!!!!")
         (do
           (turn-count-alter inc)
           (set-cell (current-player) y x)
@@ -109,14 +108,15 @@
 (defn show-commands
   "Outputs all possible commands."
   []
-  (println "Commands: stop; Y,X; new"))
+  (println "Commands: stop; \"column_index\" ; new"))
 
 (defn draw-field
   "Draws the field."
   [result]
-  (println @field)
-  (map println @field) ; doesn't output anything
-  (println @turn-count)
+  (println "---------- current state of game ----------")
+  (println (vec (range 0 field-size)))
+  (dorun (map println @field))
+  (println (str (str "Number of turns: " @turn-count) "\n"))
   (Boolean. result))
 
 (defn wrap-draw
