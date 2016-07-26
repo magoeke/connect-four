@@ -79,12 +79,17 @@
     (is (= @field new-test-field))
     (is (= @turn-count 2)))
 
-    ; column full?
+  (testing "Try to use column that didn't exist."
+    (is (nil? (prepare-command-to-set "10"))))
 
   (testing "Valid command 0"
     (prepare-command-to-set "0")
     (is (not= field new-test-field))
-    (is (= @turn-count 3))))
+    (is (= @turn-count 3)))
+
+  (testing "column is full"
+    (prepare-command-to-set "1")
+    (is (nil? (prepare-command-to-set "1")))))
 
 
 (deftest horizontal-count-test
