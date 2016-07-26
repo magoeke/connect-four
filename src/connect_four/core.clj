@@ -140,8 +140,6 @@
     (re-matches #"[0-9]+" command)(wrap-draw prepare-command-to-set command)
     :else (println "command doesn't exist")))
 
-(declare game-loop) ; feels dirty
-
 (defn handle-input
   "Handles Input from user. input != stop"
   [input]
