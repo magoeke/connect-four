@@ -60,12 +60,12 @@
   "Checks if a player won the game. Needs the last changed cell coordinates
   (y,x) as input."
   [y x]
-  (cond
-    (<= win-count (inc (+ (horizontal-count y x start-count inc) (horizontal-count y x start-count dec)))) true
-    (<= win-count (inc (+ (vertical-count y x start-count inc) (vertical-count y x start-count dec)))) true
-    (<= win-count (inc (+ (diagonal-count y x start-count inc inc) (diagonal-count y x start-count dec dec)))) true
-    (<= win-count (inc (+ (diagonal-count y x start-count inc dec) (diagonal-count y x start-count dec inc)))) true
-    :else false))
+  (if (or
+    (<= win-count (inc (+ (horizontal-count y x start-count inc) (horizontal-count y x start-count dec))))
+    (<= win-count (inc (+ (vertical-count y x start-count inc) (vertical-count y x start-count dec))))
+    (<= win-count (inc (+ (diagonal-count y x start-count inc inc) (diagonal-count y x start-count dec dec))))
+    (<= win-count (inc (+ (diagonal-count y x start-count inc dec) (diagonal-count y x start-count dec inc)))))
+    true false))
 
 (defn update-field
   "Updates field."
