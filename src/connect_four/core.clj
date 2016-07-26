@@ -145,17 +145,15 @@
 (defn handle-input
   "Handles Input from user. input != stop"
   [input]
+  (if (= input "stop")
+    (println "I hope you enjoyed the game.")
   (if (= "false" (str (Boolean. (evaluate-command (str input))))) ; ugly
-    (game-loop)
-    (println "Game Over.")))
+    true ; game goes on
+    (println "Game Over."))))
 
 (defn game-loop
   "This function represents the game loop."
   []
   (show-commands)
   (let [input (read-line)]
-    (if (not= input "stop")
-      (handle-input input)
-      (println "I hope you enjoyed the game."))))
-
-; (game-loop)
+    (if (handle-input input) (recur))))

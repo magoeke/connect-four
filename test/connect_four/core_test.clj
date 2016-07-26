@@ -213,3 +213,22 @@
   (testing "Should return true."
     (dosync (ref-set field [["-" "O"] ["-" "-"]]))
     (is (evaluate-command "1"))))
+
+(deftest handle-input-test
+  (testing "Should return nil when input is \"stop\"."
+    (is (nil? (handle-input "stop"))))
+
+  (testing "Should return true when input is random"
+    (is (true? (handle-input "a"))))
+
+  (testing "Should return true when input is new."
+    (is (true? (handle-input "new"))))
+
+  (testing "Should return true if it's not the win turn."
+    (is (true? (handle-input "1"))))
+
+  (testing "Should return nil if it's the win turn."
+    (intern 'connect-four.core 'win-count 2)
+    (intern 'connect-four.core 'field-size 2)
+    (dosync (ref-set field [["-" "-"]["-" "X"]]))
+    (is (nil? (handle-input "1")))))
