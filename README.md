@@ -22,11 +22,11 @@ Yes, I wrote test but I don't have a 100% coverage. The next box shows the outpu
 ```
 |             :name | :forms_percent | :lines_percent |
 |-------------------+----------------+----------------|
-| connect-four.core |        91.89 % |        88.89 % |
+| connect-four.core |        97.18 % |        95.45 % |
 Files with 100% coverage: 0
 
-Forms covered: 91.89 %
-Lines covered: 88.89 %
+Forms covered: 97.18 %
+Lines covered: 95.45 %
 ```
 
 ## License
